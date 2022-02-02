@@ -14,6 +14,7 @@ import (
 
 	"github.com/dave/blast/blaster"
 	"github.com/mitchellh/mapstructure"
+        "io/ioutil"
 )
 
 // New returns a new http worker
@@ -66,7 +67,11 @@ func (w *Worker) Send(ctx context.Context, raw map[string]interface{}) (map[stri
 	if response.StatusCode != 200 {
 		return map[string]interface{}{"status": response.StatusCode}, errors.New("non 200 status")
 	}
-	return map[string]interface{}{"status": 200}, nil
+	bodyBytes, err := ioutil.ReadAll(response.Body)
+    if err != nil {
+    }
+    bodyString := string(bodyBytes)
+	return map[string]interface{}{"status": 200, "body":bodyString}, nil
 }
 
 type def struct {
